@@ -1,0 +1,8 @@
+.students-row {
+    text-align: center;
+    border: 0.7px solid black;
+    cursor: pointer;
+}
+.students-row:hover {
+    opacity: 0.7;
+}   

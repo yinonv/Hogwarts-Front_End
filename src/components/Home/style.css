@@ -1,0 +1,59 @@
+.home-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.title{
+    margin-top: 15px;
+    color: white;
+    font-family: Mountains of Christmas;
+    font-size: 50px;
+    font-weight: 550;
+    margin-bottom: 20px;
+}
+.table {
+    border-collapse: collapse;
+    border: 2px solid black;
+    background: white;
+    opacity: 0.95;
+    font-size: 17px;
+}
+.first-row {
+    text-align: center;
+    font-weight: 600;
+    border: 2px solid black;
+}
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 30vw;
+}
+.loader-gif {
+    height: 50px;
+    width: 50px;
+}
+@media screen and (max-width: 900px) {
+    .buttons-container {
+        width: 40vw;
+    }
+}
+@media screen and (max-width: 650px) {
+    .buttons-container {
+        width: 55vw;
+    }
+    .table {
+        width: 90vw;
+    }
+}
+@media screen and (max-width: 470px) {
+    .buttons-container {
+        width: 80vw;
+    }
+    .title {
+        font-size: 45px;
+    }
+    .table {
+        font-size: 16px;
+        width: 95vw;
+    }
+}

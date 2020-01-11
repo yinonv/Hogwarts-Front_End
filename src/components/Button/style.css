@@ -1,0 +1,17 @@
+.button {
+    margin-bottom: 15px;
+    height: 30px;
+    font-size: 16px;
+    color: white;
+    background-color: #007BFF;
+    border-radius: 4px;
+    font-family: Laila;
+    border: none;
+    cursor: pointer;
+}
+.button:active{
+    transform: scale(.96);
+}
+.button:disabled{
+    opacity: 0.5;
+}
