@@ -1,29 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import Home from './components/Home'
-import './App.css';
-import HogwartsContext from './context/HogwartsContext'
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import './App.css';
+import Home from './components/Home'
+import HogwartsContext from './context/HogwartsContext'
 import DisplayUser from './components/DisplayUser'
 import NewStudent from './components/NewStudent'
+import EditStudent from './components/EditStudent'
 
 
 function App() {
-  const [displayedStudent, setDisplayed] = useState(null);
+  const [info, setInfo] = useState(null);
+  const updateInfo = data => setInfo(data)
 
-  const update = (info) => {
-    setDisplayed(<DisplayUser info={info} />)
-  }
   return (
     <div className="app-container">
       <Router>
         <Switch>
           <Route exact path="/">
-            <HogwartsContext.Provider value={update}>
+            <HogwartsContext.Provider value={updateInfo}>
               <Home />
             </HogwartsContext.Provider>
           </Route>
           <Route exact path="/student">
-            {displayedStudent}
+            <DisplayUser info={info} />
+          </Route>
+          <Route exact path="/student/edit">
+            <HogwartsContext.Provider value={updateInfo}>
+              <EditStudent info={info} />
+            </HogwartsContext.Provider>
           </Route>
           <Route exact path="/add">
             <NewStudent />

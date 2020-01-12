@@ -1,5 +1,4 @@
 .display-student-container {
-    margin-left: 15px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -8,7 +7,6 @@
     background: white;
     opacity: 0.95;
     font-size: 21px;
-    width: 200px;
     border-collapse: collapse;
     border: 2px solid black;
     margin-bottom: 20px;
@@ -25,4 +23,23 @@
     font-family: Mountains of Christmas;
     font-size: 50px;
     font-weight: 550;   
+}
+.col-value {
+    text-align: center;
+}
+.student-buttons-container {
+    display: flex;
+    justify-content: space-around;
+    width: 30vw;
+}
+.name-input {
+    font-size: 21px;
+    text-align: center;
+    width: 200px;
+}
+@media screen and (max-width: 600px) {
+    .student-info-table {
+        width: 95vw;
+        font-size: 19px;
+    }
 }

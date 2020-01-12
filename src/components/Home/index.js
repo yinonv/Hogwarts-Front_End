@@ -9,6 +9,10 @@ function Home() {
     const [students, setStudents] = useState(null);
     const [loading, setLoading] = useState(false);
     const history = useHistory();
+
+    useEffect(() => {
+        getList()
+    }, []);
     const getList = async () => {
         setLoading(true)
         try {
@@ -25,7 +29,6 @@ function Home() {
                 <h1 className="title">Hogwarts Students</h1>
             </div>
             <div className="buttons-container">
-                <Button onClick={getList} text="Get Student List" />
                 <Button onClick={() => history.push('/add')} text="Add Student" />
             </div>
             {loading && <img className="loader-gif" src="./loader.gif"></img>}

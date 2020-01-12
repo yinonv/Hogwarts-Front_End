@@ -16,6 +16,10 @@ const addStudent = (student) => {
     console.log(JSON.stringify(student))
     return axios.post(`${url}:${port}/students/add`, JSON.stringify(student))
 }
+const updateStudent = (student) => {
+    return axios.post(`${url}:${port}/students/edit`, JSON.stringify(student))
+}
+
 
 // const url = 'https://hogwarts-students.herokuapp.com'
 // const getStudents = () => {
@@ -32,4 +36,4 @@ const addStudent = (student) => {
 //     return axios.post(`${url}/students/add`, JSON.stringify(student))
 // }
 
-export { getStudents, getSkills, getCourses, addStudent }
+export { getStudents, getSkills, getCourses, addStudent, updateStudent }
