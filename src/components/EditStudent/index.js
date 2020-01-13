@@ -6,22 +6,33 @@ import { useHistory } from 'react-router-dom'
 import { getDate } from '../../tools'
 import HogwartsContext from '../../context/HogwartsContext'
 import { useAlert, positions } from 'react-alert'
+import swal from 'sweetalert';
+import UserSkills from '../UserSkills'
 
 function NewStudent(props) {
-    const [skills, setSkills] = useState(null)
-    const [coursesArray, setCoursesArray] = useState(null)
     const [name, setName] = useState(props.info.name)
     const [lastName, setLastName] = useState(props.info.lastName)
     const student = { ...props.info }
+    const studentCopy = { ...props.info }
+    const [skills, setSkills] = useState(null)
+    const [coursesArray, setCoursesArray] = useState(null)
+    const [rangeValue, setRangeValue] = useState(1)
     const skill = useRef(null)
     const level = useRef(null)
     const course = useRef(null)
     const history = useHistory()
     const updateInfo = useContext(HogwartsContext);
     const alert = useAlert()
-
+    const { text, title, type } = props;
+    let loader;
+    if (type == "new") {
+        loader = './loader.gif'
+    } else {
+        loader = '../loader.gif'
+    }
     useEffect(() => {
         displayData()
+        level.current.value = 1
     }, []);
     const displayData = async () => {
         const skillsResponse = await getSkills();
@@ -33,50 +44,79 @@ function NewStudent(props) {
         const text = e.target.innerHTML;
         const selectedSkill = skill.current.value;
         const selectedLevel = level.current.value;
+        const newSkill = { skill: selectedSkill, level: selectedLevel };
         if (text == "add existing") {
-            student.existing.push({ skill: selectedSkill, level: selectedLevel })
+            student.existing = [...student.existing, newSkill]
         } else {
-            student.desired.push({ skill: selectedSkill, level: selectedLevel })
+            student.desired = [...student.desired, newSkill]
         }
-        updateInfo({ ...student })
+        updateInfo({ ...student }, type)
     }
     const updateCourse = () => {
         const selectedCourse = course.current.value;
         student.courses.push(selectedCourse)
-        updateInfo({ ...student })
+        updateInfo({ ...student }, type)
     }
     const saveUpdate = async () => {
+        const settings = { timeout: 2000, position: positions.BOTTOM_CENTER }
+        if (name == '' || lastName == '') {
+            alert.error("Name is required", settings)
+            return;
+        }
         student.name = name;
         student.lastName = lastName;
-        student.lastUpdate = getDate()
-        const response = await updateStudent(student)
-        updateInfo({ ...student })
-        history.push('/student')
-        alert.success('Updated Student', { timeout: 2000, position: positions.TOP_RIGHT })
+        if (type == "new") {
+            student.createDate = getDate()
+            const response = await addStudent(student)
+            student.desired = [];
+            student.courses = [];
+            student.existing = [];
+            student.name = ''
+            student.lastName = ''
+            history.push('/')
+            alert.success('Student Created', settings)
+        } else {
+            student.lastUpdate = getDate()
+            const response = await updateStudent(student)
+            history.push('/student')
+            alert.success('Student Updated', settings)
+        }
+        updateInfo({ ...student }, type)
     }
     const deleteExisting = (e, i) => {
         student.existing.splice(i, 1);
         e.target.innerHTML = ""
-        updateInfo({ ...student })
+        updateInfo({ ...student }, type)
     }
     const deleteDesired = (e, i) => {
         student.desired.splice(i, 1);
         e.target.innerHTML = ""
-        updateInfo({ ...student })
+        updateInfo({ ...student }, type)
     }
     const deleteCourse = (e, i) => {
         student.courses.splice(i, 1);
-        e.target.innerHTML = ""
-        updateInfo({ ...student })
+        e.target.innerHTML = "";
+        updateInfo({ ...student }, type)
     }
-    const goBack = () => {
-        if (window.confirm("Are you sure you want to discard this change?")) {
-            history.push('/student');
-          }
+    const goBack = async () => {
+        const answer = await swal("Are you sure you want to discard without saving?", {
+            dangerMode: true,
+            buttons: true,
+        });
+        if (answer == null) {
+            return
+        }
+        if (answer && type == "new") {
+            studentCopy.desired = [];
+            studentCopy.courses = [];
+            studentCopy.existing = [];
+        }
+        history.push('/');
+        updateInfo({ ...studentCopy }, type)
     }
     return (
         <div className="form-container">
-            <h1 className="new-student-title">Edit Student</h1>
+            <h1 className="new-student-title">{title}</h1>
             <div className="inputs-container">
                 <div className="name-input-container">
                     <label className="label">Name
@@ -90,16 +130,16 @@ function NewStudent(props) {
                     <div className="skills-container">
                         <h3 className="skills-text">Skills</h3>
                         <div className="select-container">
-                            {skills == null && <img className="loader" src="./loader.gif"></img>}
+                            {skills == null && <img className="loader" src={loader}></img>}
                             {skills != null &&
                                 <select ref={skill} className="skills-select">
                                     {skills.map(skill => <option>{skill}</option>)}
                                 </select>}
                         </div>
                         <div className="skill-levels">
-                            <label className="level-label"> Level
-                        <input ref={level} className="level-input" type="number" min="1" max="5"></input>
-                            </label>
+                            <div className="range-value">{`Level: ${rangeValue}`}</div>
+                            <input ref={level} onChange={(e) => setRangeValue(e.target.value)}
+                                className="level-input" type="range" min="1" max="5"></input>
                         </div>
                         <div className="add-button-container">
                             <Button onClick={(e) => updateSkills(e)} text="add existing" />
@@ -109,7 +149,7 @@ function NewStudent(props) {
                     <div className="courses-container">
                         <div className="top-course-container">
                             <h3 className="courses-text">Courses</h3>
-                            {coursesArray == null && <img className="loader" src="./loader.gif"></img>}
+                            {coursesArray == null && <img className="loader" src={loader}></img>}
                             {coursesArray != null &&
                                 <select ref={course} className="courses-select">
                                     {coursesArray.map(course => <option>{course}</option>)}
@@ -122,17 +162,14 @@ function NewStudent(props) {
                 </div>
                 <div className="preview-container">
                     <h4 className="preview-name">{`${name} ${lastName}`}</h4>
-                    <div className="spans-container">{`Existing skills: `}{student.existing.map((exist, i) => <div><span key={i} className="selected"
-                        onClick={(e) => deleteExisting(e, i)}>{`${exist.skill}(${exist.level}) `}</span></div>)}</div>
-                    <div className="spans-container">{`Desired skills: `}{student.desired.map((desired, i) => <div><span key={i} className="selected"
-                        onClick={desired => deleteDesired(desired, i)}>{`${desired.skill}(${desired.level}) `}</span></div>)}</div>
-                    <div className="spans-container">{`Courses interested: `}{student.courses.map((course, i) => <div><span key={i} className="selected"
-                        onClick={course => deleteCourse(course, i)}>{course}</span></div>)}</div>
+                    <UserSkills title={"Existing Skills: "} dataArray={student.existing} callback={(e, i) => deleteExisting(e, i)} />
+                    <UserSkills title={"Desired Skills: "} dataArray={student.desired} callback={(e, i) => deleteDesired(e, i)} />
+                    <UserSkills title={"Courses: "} dataArray={student.courses} callback={(e, i) => deleteCourse(e, i)} />
                 </div>
-                <Button onClick={saveUpdate} text="Update Student" />
+                <Button onClick={saveUpdate} text={text} />
                 <Button onClick={goBack} text="Back" />
             </div>
-        </div>
+        </div >
     )
 }
 

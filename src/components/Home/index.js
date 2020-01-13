@@ -8,16 +8,22 @@ import Button from '../Button'
 function Home() {
     const [students, setStudents] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [skills, setSkills] = useState(null)
+    const [coursesArray, setCoursesArray] = useState(null)
     const history = useHistory();
 
     useEffect(() => {
-        getList()
+        getData()
     }, []);
-    const getList = async () => {
+    const getData = async () => {
         setLoading(true)
         try {
             const response = await getStudents();
             setStudents(response.data);
+            // const skillsResponse = await getSkills();
+            // const coursesResponse = await getCourses();
+            // setCoursesArray(coursesResponse.data)
+            // setSkills(skillsResponse.data)
         } catch (e) {
             console.log(e)
         }

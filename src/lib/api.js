@@ -1,43 +1,26 @@
 import axios from 'axios'
 
-const url = 'http://127.0.0.1' 
-const port = 2700
+const localhost = 'http://127.0.0.1:2700'
+//const herokuServer = 'https://hogwarts-students.herokuapp.com'
 
 const getStudents = () => {
-    return axios.get(`${url}:${port}/students`)
+    return axios.get(`${localhost}/students`)
 }
 const getSkills = () => {
-    return axios.get(`${url}:${port}/skills`)
+    return axios.get(`${localhost}/skills`)
 }
 const getCourses = () => {
-    return axios.get(`${url}:${port}/courses`)
+    return axios.get(`${localhost}/courses`)
 }
 const addStudent = (student) => {
     console.log(JSON.stringify(student))
-    return axios.post(`${url}:${port}/students/add`, JSON.stringify(student))
+    return axios.post(`${localhost}/student/add`, JSON.stringify(student))
 }
 const updateStudent = (student) => {
-    return axios.post(`${url}:${port}/students/edit`, JSON.stringify(student))
+    return axios.post(`${localhost}/student/edit`, JSON.stringify(student))
+}
+const deleteStudent = (id) => {
+    return axios.delete(`${localhost}/student/delete`, { data: { 'id': id } })
 }
 
-
-// const url = 'https://hogwarts-students.herokuapp.com'
-// const getStudents = () => {
-//     return axios.get(`${url}/students`)
-// }
-// const getSkills = () => {
-//     return axios.get(`${url}/skills`)
-// }
-// const getCourses = () => {
-//     return axios.get(`${url}/courses`)
-// }
-// const addStudent = (student) => {
-//     console.log(JSON.stringify(student))
-//     return axios.post(`${url}/students/add`, JSON.stringify(student))
-// }
-// const updateStudent = (student) => {
-//     return axios.post(`${url}/students/edit`, JSON.stringify(student))
-// }
-
-
-export { getStudents, getSkills, getCourses, addStudent, updateStudent }
+export { getStudents, getSkills, getCourses, addStudent, updateStudent, deleteStudent }

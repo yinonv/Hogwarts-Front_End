@@ -14,14 +14,25 @@
 .table {
     border-collapse: collapse;
     border: 2px solid black;
-    background: white;
     opacity: 0.95;
     font-size: 17px;
+    overflow: scroll;
+    height: 100%;
 }
-.first-row {
+.table td {
+    border-top: 1px solid black;
+}
+.first-row  {
     text-align: center;
     font-weight: 600;
     border: 2px solid black;
+    background: white;
+}
+.table tr:nth-child(even) {
+    background: #b8d1f3;
+}
+.table tr:nth-child(odd) {
+    background: white;
 }
 .buttons-container {
     display: flex;

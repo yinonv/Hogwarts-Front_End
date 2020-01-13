@@ -2,11 +2,31 @@ import React, { useState } from 'react';
 import './style.css'
 import Button from '../Button';
 import { useHistory } from 'react-router-dom'
+import { deleteStudent } from '../../lib/api'
+import { useAlert, positions } from 'react-alert'
+import swal from 'sweetalert';
 
 function DisplayUser(props) {
     const history = useHistory();
+    const alert = useAlert()
     const { info } = props;
     const { name, lastName, id, existing, desired, courses, createDate, lastUpdate } = info;
+
+    const handleDelete = async () => {
+        const answer = await swal(`Are you sure you want to delete ${name} ${lastName}?`, {
+            dangerMode: true,
+            buttons: true,
+        });
+        if (answer == null) {
+            return
+        }
+        const response = await deleteStudent(id)
+        if (response) {
+            const settings = { timeout: 2000, position: positions.TOP_RIGHT }
+            alert.success('Student Deleted', settings)
+            history.push('/');
+        }
+    }
 
 
     return (
@@ -41,15 +61,16 @@ function DisplayUser(props) {
                     <td className="col-title">Created At</td>
                     <td className="col-value">{`${createDate.date} - ${createDate.time}`}</td>
                 </tr>
-                {lastUpdate != undefined && 
-                <tr className="student-row">
-                    <td className="col-title">Last Update</td>
-                    <td className="col-value">{`${lastUpdate.date} - ${lastUpdate.time}`}</td>
-                </tr>}
+                {lastUpdate != undefined &&
+                    <tr className="student-row">
+                        <td className="col-title">Last Update</td>
+                        <td className="col-value">{`${lastUpdate.date} - ${lastUpdate.time}`}</td>
+                    </tr>}
             </table>
             <div className="student-buttons-container">
                 <Button onClick={() => history.push('/')} text="Back" />
                 <Button onClick={() => history.push('/student/edit')} text="Edit" />
+                <Button onClick={handleDelete} text="Delete" />
             </div>
         </div>
     )

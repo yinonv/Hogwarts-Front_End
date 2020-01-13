@@ -2,9 +2,8 @@ body {
     font-family: 'Laila', serif;
 }
 .app-container {
-    height: 100vh;
+    min-height: 100vh;
     background-image: url("./hogwarts.png");
     background-size: cover;
-    background-repeat: no-repeat;
     background-position: center;
 }

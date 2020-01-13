@@ -6,10 +6,14 @@
 .student-info-table {
     background: white;
     opacity: 0.95;
-    font-size: 21px;
+    font-size: 18px;
     border-collapse: collapse;
     border: 2px solid black;
     margin-bottom: 20px;
+    padding: 10px;
+}
+.student-info-table td {
+    padding: 8px;
 }
 .student-row {
     border: 0.7px solid black;

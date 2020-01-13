@@ -1,0 +1,17 @@
+.data-title {
+    font-weight: 600;
+}
+.data-wrapper {
+    display: flex;
+}
+.data-span-wrapper {
+    display: flex;
+}
+.selected {
+    cursor: pointer;
+    margin-left: 6px;
+    display: flex;
+}
+.selected:hover {
+    opacity: 0.8;
+}

@@ -6,6 +6,4 @@ function Button(props) {
     return <button onClick={onClick} className="button">{text}</button>
 }
 
-//background-color: #dc3545;
-
 export default Button;
