@@ -35,5 +35,9 @@ const updateStudent = (student) => {
 //     console.log(JSON.stringify(student))
 //     return axios.post(`${url}/students/add`, JSON.stringify(student))
 // }
+// const updateStudent = (student) => {
+//     return axios.post(`${url}/students/edit`, JSON.stringify(student))
+// }
+
 
 export { getStudents, getSkills, getCourses, addStudent, updateStudent }

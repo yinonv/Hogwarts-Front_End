@@ -5,6 +5,7 @@ import Button from '../Button'
 import { useHistory } from 'react-router-dom'
 import { getDate } from '../../tools'
 import HogwartsContext from '../../context/HogwartsContext'
+import { useAlert, positions } from 'react-alert'
 
 function NewStudent(props) {
     const [skills, setSkills] = useState(null)
@@ -17,6 +18,7 @@ function NewStudent(props) {
     const course = useRef(null)
     const history = useHistory()
     const updateInfo = useContext(HogwartsContext);
+    const alert = useAlert()
 
     useEffect(() => {
         displayData()
@@ -48,8 +50,9 @@ function NewStudent(props) {
         student.lastName = lastName;
         student.lastUpdate = getDate()
         const response = await updateStudent(student)
-        updateInfo({...student})
+        updateInfo({ ...student })
         history.push('/student')
+        alert.success('Updated Student', { timeout: 2000, position: positions.TOP_RIGHT })
     }
     const deleteExisting = (e, i) => {
         student.existing.splice(i, 1);
@@ -65,6 +68,11 @@ function NewStudent(props) {
         student.courses.splice(i, 1);
         e.target.innerHTML = ""
         updateInfo({ ...student })
+    }
+    const goBack = () => {
+        if (window.confirm("Are you sure you want to discard this change?")) {
+            history.push('/student');
+          }
     }
     return (
         <div className="form-container">
@@ -122,7 +130,7 @@ function NewStudent(props) {
                         onClick={course => deleteCourse(course, i)}>{course}</span></div>)}</div>
                 </div>
                 <Button onClick={saveUpdate} text="Update Student" />
-                <Button onClick={() => history.push('/student')} text="Back" />
+                <Button onClick={goBack} text="Back" />
             </div>
         </div>
     )
