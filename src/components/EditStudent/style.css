@@ -154,19 +154,7 @@
 .name-input-container {
     display: flex;
     justify-content: space-between;
-}
-.selected {
-    cursor: pointer;
-    margin-left: 6px;
-    display: flex;
-}
-.selected:hover {
-    opacity: 0.8;
-}
-.spans-container {
-    display: flex;
-}
-@media screen and (max-width: 600px) {
+}@media screen and (max-width: 600px) {
     .inputs-container {
         width: 95vw;
     }

@@ -6,10 +6,10 @@ import { useHistory } from 'react-router-dom'
 function User(props) {
     const { info } = props;
     const { name, lastName, id, existing } = info;
-    const updateInfo = useContext(HogwartsContext);
+    const { setDisplayInfo } = useContext(HogwartsContext);
     const history = useHistory();
     const displayStudent = () => {
-        updateInfo(info)
+        setDisplayInfo(info)
         history.push('/student')
     }
     return (

@@ -12,6 +12,23 @@
 .button:active{
     transform: scale(.96);
 }
+.button:hover {
+    opacity: 0.94;
+}
 .button:disabled{
     opacity: 0.5;
+}
+.red {
+    background-color: #dc3545 !important;
+}
+.green {
+    background-color: #28a745 !important;
+}
+.grey {
+    background-color: #6c757d !important;
+}
+.yellow {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    
 }

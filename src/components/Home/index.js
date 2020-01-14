@@ -1,33 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom'
 import './style.css';
-import { getStudents } from '../../lib/api'
 import User from '../User'
 import Button from '../Button'
+import { getStudents } from '../../lib/api'
 
 function Home() {
     const [students, setStudents] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [skills, setSkills] = useState(null)
-    const [coursesArray, setCoursesArray] = useState(null)
     const history = useHistory();
 
-    useEffect(() => {
-        getData()
-    }, []);
-    const getData = async () => {
-        setLoading(true)
-        try {
-            const response = await getStudents();
-            setStudents(response.data);
-            // const skillsResponse = await getSkills();
-            // const coursesResponse = await getCourses();
-            // setCoursesArray(coursesResponse.data)
-            // setSkills(skillsResponse.data)
-        } catch (e) {
-            console.log(e)
-        }
-        setLoading(false)
+    useEffect(() => { getStudentsList() }, [])
+    const getStudentsList = async () => {
+        const response = await getStudents()
+        setStudents(response.data)
     }
     return (
         <div className="home-container">
@@ -36,8 +21,9 @@ function Home() {
             </div>
             <div className="buttons-container">
                 <Button onClick={() => history.push('/add')} text="Add Student" />
+                <Button onClick={() => history.push('/dashboard')} text="Dashboard" color="yellow" />
             </div>
-            {loading && <img className="loader-gif" src="./loader.gif"></img>}
+            {students == null && <img className="loader-gif" src="./loader.gif"></img>}
             {students != null &&
                 <div>
                     <table className="table">

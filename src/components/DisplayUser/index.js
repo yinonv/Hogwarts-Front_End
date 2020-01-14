@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './style.css'
 import Button from '../Button';
 import { useHistory } from 'react-router-dom'
@@ -22,12 +22,11 @@ function DisplayUser(props) {
         }
         const response = await deleteStudent(id)
         if (response) {
-            const settings = { timeout: 2000, position: positions.TOP_RIGHT }
+            const settings = { timeout: 2000, position: positions.BOTTOM_CENTER }
             alert.success('Student Deleted', settings)
             history.push('/');
         }
     }
-
 
     return (
         <div className="display-student-container">
@@ -68,9 +67,9 @@ function DisplayUser(props) {
                     </tr>}
             </table>
             <div className="student-buttons-container">
-                <Button onClick={() => history.push('/')} text="Back" />
+                <Button onClick={() => history.push('/')} text="Back" color="grey" />
                 <Button onClick={() => history.push('/student/edit')} text="Edit" />
-                <Button onClick={handleDelete} text="Delete" />
+                <Button onClick={handleDelete} color="red" text="Delete" />
             </div>
         </div>
     )

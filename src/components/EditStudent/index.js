@@ -1,27 +1,25 @@
 import React, { useEffect, useState, useRef, useContext } from 'react';
 import './style.css'
-import { getSkills, getCourses, addStudent, updateStudent } from '../../lib/api'
+import { addStudent, updateStudent } from '../../lib/api'
 import Button from '../Button'
 import { useHistory } from 'react-router-dom'
 import { getDate } from '../../tools'
 import HogwartsContext from '../../context/HogwartsContext'
 import { useAlert, positions } from 'react-alert'
 import swal from 'sweetalert';
-import UserSkills from '../UserSkills'
+import UserData from '../UserData'
 
 function NewStudent(props) {
     const [name, setName] = useState(props.info.name)
     const [lastName, setLastName] = useState(props.info.lastName)
     const student = { ...props.info }
-    const studentCopy = { ...props.info }
-    const [skills, setSkills] = useState(null)
-    const [coursesArray, setCoursesArray] = useState(null)
+    const studentCopy = { ...student }
     const [rangeValue, setRangeValue] = useState(1)
     const skill = useRef(null)
     const level = useRef(null)
     const course = useRef(null)
     const history = useHistory()
-    const updateInfo = useContext(HogwartsContext);
+    const { updateInfo, resetChanges, changed, skills, coursesArray, updateStates } = useContext(HogwartsContext);
     const alert = useAlert()
     const { text, title, type } = props;
     let loader;
@@ -31,40 +29,51 @@ function NewStudent(props) {
         loader = '../loader.gif'
     }
     useEffect(() => {
-        displayData()
         level.current.value = 1
     }, []);
-    const displayData = async () => {
-        const skillsResponse = await getSkills();
-        const coursesResponse = await getCourses();
-        setCoursesArray(coursesResponse.data)
-        setSkills(skillsResponse.data)
-    }
     const updateSkills = (e) => {
         const text = e.target.innerHTML;
         const selectedSkill = skill.current.value;
         const selectedLevel = level.current.value;
         const newSkill = { skill: selectedSkill, level: selectedLevel };
+        let skillType;
+        let otherSkillType;
         if (text == "add existing") {
-            student.existing = [...student.existing, newSkill]
+            skillType = "existing"
+            otherSkillType = "desired"
         } else {
-            student.desired = [...student.desired, newSkill]
+            skillType = "desired"
+            otherSkillType = "existing"
         }
-        updateInfo({ ...student }, type)
+        const res1 = student[skillType].map(data => data.skill == selectedSkill)
+        const res2 = student[otherSkillType].map(data => data.skill == selectedSkill && data.level == selectedLevel)
+        if (res1.includes(true) || res2.includes(true)) {
+            return;
+        }
+        student[skillType].push(newSkill);
+        updateInfo({ ...student }, type);
     }
     const updateCourse = () => {
         const selectedCourse = course.current.value;
+        const res = student.courses.map(course => course == selectedCourse)
+        if (res.includes(true)) {
+            return;
+        }
         student.courses.push(selectedCourse)
         updateInfo({ ...student }, type)
     }
     const saveUpdate = async () => {
-        const settings = { timeout: 2000, position: positions.BOTTOM_CENTER }
-        if (name == '' || lastName == '') {
-            alert.error("Name is required", settings)
-            return;
-        }
         student.name = name;
         student.lastName = lastName;
+        const settings = { timeout: 2000, position: positions.BOTTOM_CENTER }
+        if (name == '' || lastName == '') {
+            alert.error("Full name is required", settings)
+            return;
+        }
+        if (!changed && type == "edit") {
+            alert.error("No change has been made!", settings)
+            return;
+        }
         if (type == "new") {
             student.createDate = getDate()
             const response = await addStudent(student)
@@ -82,6 +91,8 @@ function NewStudent(props) {
             alert.success('Student Updated', settings)
         }
         updateInfo({ ...student }, type)
+        resetChanges();
+        updateStates()
     }
     const deleteExisting = (e, i) => {
         student.existing.splice(i, 1);
@@ -99,6 +110,10 @@ function NewStudent(props) {
         updateInfo({ ...student }, type)
     }
     const goBack = async () => {
+        if (!changed) {
+            history.push('/')
+            return;
+        }
         const answer = await swal("Are you sure you want to discard without saving?", {
             dangerMode: true,
             buttons: true,
@@ -113,13 +128,15 @@ function NewStudent(props) {
         }
         history.push('/');
         updateInfo({ ...studentCopy }, type)
+        resetChanges();
+        updateStates()
     }
     return (
         <div className="form-container">
             <h1 className="new-student-title">{title}</h1>
             <div className="inputs-container">
                 <div className="name-input-container">
-                    <label className="label">Name
+                    <label className="label">Fist Name
             <input className="input" placeholder={name} onChange={(e) => setName(e.target.value)}></input>
                     </label>
                     <label className="label">Last name
@@ -162,12 +179,12 @@ function NewStudent(props) {
                 </div>
                 <div className="preview-container">
                     <h4 className="preview-name">{`${name} ${lastName}`}</h4>
-                    <UserSkills title={"Existing Skills: "} dataArray={student.existing} callback={(e, i) => deleteExisting(e, i)} />
-                    <UserSkills title={"Desired Skills: "} dataArray={student.desired} callback={(e, i) => deleteDesired(e, i)} />
-                    <UserSkills title={"Courses: "} dataArray={student.courses} callback={(e, i) => deleteCourse(e, i)} />
+                    <UserData title={"Existing Skills: "} dataArray={student.existing} callback={(e, i) => deleteExisting(e, i)} />
+                    <UserData title={"Desired Skills: "} dataArray={student.desired} callback={(e, i) => deleteDesired(e, i)} />
+                    <UserData title={"Courses: "} dataArray={student.courses} callback={(e, i) => deleteCourse(e, i)} />
                 </div>
-                <Button onClick={saveUpdate} text={text} />
-                <Button onClick={goBack} text="Back" />
+                <Button onClick={saveUpdate} text={text} color="green" />
+                <Button onClick={goBack} text="Back" color="grey" />
             </div>
         </div >
     )

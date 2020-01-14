@@ -1,0 +1,39 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+.dashboard-title {
+    color: white;
+    font-family: Mountains of Christmas;
+    font-size: 50px;
+}
+.dashboard-body {
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+}
+.doughnuts-container {
+    display: flex;
+}
+.dashboard-loader {
+    margin-bottom: 20px;
+}
+.doughnut-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.doughnut-title{
+    color: white;
+}
+@media screen and (max-width: 800px) {
+    .doughnuts-container {
+        flex-direction: column;
+    }
+    .app-container {
+        min-height: 145vh;
+    }
+}
