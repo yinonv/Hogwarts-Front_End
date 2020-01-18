@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const server = 'http://127.0.0.1:2700'
-//const server = 'https://hogwarts-students.herokuapp.com'
+//const server = 'http://127.0.0.1:2700'
+const server = 'https://hogwarts-students.herokuapp.com'
 
 const getStudents = () => {
     return axios.get(`${server}/students`)

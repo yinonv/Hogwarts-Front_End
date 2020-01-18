@@ -22,14 +22,14 @@ function App() {
     desired: [],
     courses: [],
   });
-  useEffect(() => { getData(); updateStates() }, []);
+  useEffect(() => { getData(); updateStats() }, []);
   const getData = async () => {
     const skillsResponse = await getSkills();
     const coursesResponse = await getCourses();
     setCoursesArray(coursesResponse.data)
     setSkills(skillsResponse.data)
   }
-  const updateStates = async () => {
+  const updateStats = async () => {
     const response = await getStats();
     setStats(response.data);
   }
@@ -51,7 +51,7 @@ function App() {
     coursesArray: coursesArray,
     setDisplayInfo: setDisplayInfo,
     stats: stats,
-    updateStates: updateStates
+    updateStats: updateStats
   }
 
   return (

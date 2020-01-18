@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './style.css'
 import Button from '../Button';
 import { useHistory } from 'react-router-dom'
 import { deleteStudent } from '../../lib/api'
 import { useAlert, positions } from 'react-alert'
 import swal from 'sweetalert';
+import HogwartsContext from '../../context/HogwartsContext'
 
 function DisplayUser(props) {
     const history = useHistory();
     const alert = useAlert()
     const { info } = props;
     const { name, lastName, id, existing, desired, courses, createDate, lastUpdate } = info;
+    const { updateStats } = useContext(HogwartsContext);
 
     const handleDelete = async () => {
         const answer = await swal(`Are you sure you want to delete ${name} ${lastName}?`, {
@@ -24,6 +26,7 @@ function DisplayUser(props) {
         if (response) {
             const settings = { timeout: 2000, position: positions.BOTTOM_CENTER }
             alert.success('Student Deleted', settings)
+            updateStats();
             history.push('/');
         }
     }

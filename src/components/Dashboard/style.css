@@ -17,6 +17,7 @@
 }
 .doughnuts-container {
     display: flex;
+    margin-bottom: 15px;
 }
 .dashboard-loader {
     margin-bottom: 20px;

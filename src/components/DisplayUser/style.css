@@ -46,4 +46,7 @@
         width: 95vw;
         font-size: 19px;
     }
+    .student-buttons-container {
+        width: 85vw;
+    }
 }

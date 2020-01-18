@@ -19,7 +19,7 @@ function NewStudent(props) {
     const level = useRef(null)
     const course = useRef(null)
     const history = useHistory()
-    const { updateInfo, resetChanges, changed, skills, coursesArray, updateStates } = useContext(HogwartsContext);
+    const { updateInfo, resetChanges, changed, skills, coursesArray, updateStats } = useContext(HogwartsContext);
     const alert = useAlert()
     const { text, title, type } = props;
     let loader;
@@ -92,7 +92,7 @@ function NewStudent(props) {
         }
         updateInfo({ ...student }, type)
         resetChanges();
-        updateStates()
+        updateStats()
     }
     const deleteExisting = (e, i) => {
         student.existing.splice(i, 1);
@@ -110,7 +110,8 @@ function NewStudent(props) {
         updateInfo({ ...student }, type)
     }
     const goBack = async () => {
-        if (!changed) {
+        debugger;
+        if (!changed && name == studentCopy.name && lastName == studentCopy.lastName) {
             history.push('/')
             return;
         }
@@ -129,7 +130,7 @@ function NewStudent(props) {
         history.push('/');
         updateInfo({ ...studentCopy }, type)
         resetChanges();
-        updateStates()
+        updateStats()
     }
     return (
         <div className="form-container">
@@ -137,10 +138,10 @@ function NewStudent(props) {
             <div className="inputs-container">
                 <div className="name-input-container">
                     <label className="label">Fist Name
-            <input className="input" placeholder={name} onChange={(e) => setName(e.target.value)}></input>
+            <input className="input" value={name} onChange={(e) => setName(e.target.value)}></input>
                     </label>
                     <label className="label">Last name
-            <input className="input" placeholder={lastName} onChange={(e) => setLastName(e.target.value)}></input>
+            <input className="input" value={lastName} onChange={(e) => setLastName(e.target.value)}></input>
                     </label>
                 </div>
                 <div className="skills-courses-container">
